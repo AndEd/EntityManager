@@ -13,14 +13,12 @@ abstract class Animal extends WalkEntity implements Ageable{
     protected $speed = 0.7;
 
     public function initEntity(){
-        if($this->getDataProperty(self::DATA_AGEABLE_FLAGS) === null){
-            $this->setDataProperty(self::DATA_AGEABLE_FLAGS, self::DATA_TYPE_BYTE, 0);
-        }
+        $this->setDataProperty(self::DATA_FLAGS, self::DATA_FLAG_BABY, false);
         parent::initEntity();
     }
 
     public function isBaby(){
-        return $this->getDataFlag(self::DATA_AGEABLE_FLAGS, self::DATA_FLAG_BABY);
+        return $this->getDataFlag(self::DATA_FLAGS, self::DATA_FLAG_BABY);
     }
 
     public function updateTick(){
