@@ -244,11 +244,7 @@ class EntityManager extends PluginBase implements Listener{
      * @return BaseEntity|Entity
      */
     public static function createEntity($type, Position $source, ...$args){
-        $chunk = $source->getLevel()->getChunk($source->x >> 4, $source->z >> 4, true);
-        if($chunk == null) return null;
-        if(!$chunk->isLoaded()) $chunk->load();
-        if(!$chunk->isGenerated()) $chunk->setGenerated();
-        if(!$chunk->isPopulated()) $chunk->setPopulated();
+        $level = $source->getLevel();
         $nbt = new CompoundTag("", [
             "Pos" => new ListTag("Pos", [
                 new DoubleTag("", $source->x),
@@ -275,11 +271,11 @@ class EntityManager extends PluginBase implements Listener{
         if(isset(self::$knownEntities[$type])){
             $class = self::$knownEntities[$type];
             /** @var BaseEntity $entity */
-            $entity =  new $class($chunk, $nbt, ...$args);
+            $entity =  new $class($level, $nbt, ...$args);
             if($entity != null && $entity->isCreated()) $entity->spawnToAll();
             return $entity;
         }else{
-            $entity = Entity::createEntity($type, $chunk, $nbt, ...$args);
+            $entity = Entity::createEntity($type, $level, $nbt, ...$args);
             if($entity != null) $entity->spawnToAll();
             return $entity;
         }
